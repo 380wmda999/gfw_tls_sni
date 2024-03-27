@@ -21,7 +21,7 @@ func main() {
 	}
 	var host = "www.wikipedia.org"
 	spec, _ := tls.UTLSIdToSpec(tls.HelloChrome_120)
-	ctx, _ := context.WithTimeout(context.Background(), time.Second*2)
+	ctx, _ := context.WithTimeout(context.Background(), time.Second*5)
 	tls_sni.SetMinLengthAndSleepTime(16000, time.Millisecond*500)
 	tlsConn, err := tls_sni.HandleShakeContext(c, host, ctx, &tls.Config{
 		ServerName:         host,

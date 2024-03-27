@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"crypto/rand"
-	"fmt"
 	tls "github.com/refraction-networking/utls"
 	"math/big"
 	"net"
@@ -27,12 +26,13 @@ func (c *hostConn) Write(b []byte) (n int, err error) {
 			rn, _ := rand.Int(rand.Reader, big.NewInt(int64(hlen)))
 			wp := hostIndex + int(rn.Int64())
 			wn, err = c.Conn.Write(b[0:wp])
-			fmt.Println(hostIndex, wp)
 			if err != nil {
 				return 0, err
 			}
 			n += wn
-			time.Sleep(sleepTime)
+			if sleepTime > 0 {
+				time.Sleep(sleepTime)
+			}
 			wn, err = c.Conn.Write(b[wp:])
 			n += wn
 			return
@@ -42,8 +42,8 @@ func (c *hostConn) Write(b []byte) (n int, err error) {
 	return c.Conn.Write(b)
 }
 
-var minLength = 10000
-var sleepTime = time.Millisecond * 200
+var minLength = 13000
+var sleepTime = time.Millisecond * 0
 
 func SetMinLengthAndSleepTime(m int, s time.Duration) {
 	if m > minLength {
